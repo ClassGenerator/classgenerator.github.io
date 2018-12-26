@@ -141,7 +141,7 @@ code += `ostream& operator<<(ostream &stream, ${className} &${className.toLowerC
 `;
          }
 
-         code += `  return stream;
+         code += `    return stream;
 `;
 code += `}`;
 
