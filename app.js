@@ -165,8 +165,8 @@ code += `}`;
 `;
          }
 
-         code += `  return stream;
-         `;
+         code += `    return stream;
+`;
          code += `}
 `;
 
