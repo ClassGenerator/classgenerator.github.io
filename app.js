@@ -285,6 +285,8 @@ void main()
    cout << ${className.toLowerCase()}_1 << endl;
    cout << ${className.toLowerCase()}_2 << endl;
    
+   Extend extend_test("testName");
+   
    Extend extend;
    cin >> extend; //NE RABOTI AKO E LIST NO DA SE PISHE NA IZPIT
    cout << "- - - - - - - - - - - - - -" << endl;
