@@ -28,13 +28,13 @@ function copycode() {
  #include <string>
  #include <vector>
  #include <list>
+ #include <exception>
  
  using namespace std;
  
  class ${className}
  {
- 
- //Chlen Promenlivi: 
+ //Chlen Promenlivi, Chastni Promenlivi: 
  private:
 `;
  let propertyNames = $('.property-name');
@@ -77,6 +77,7 @@ function copycode() {
 
          code += ` }
  
+
 `;
 
  code += ` //Ekspliciten Konstruktor:\n`;
@@ -127,6 +128,7 @@ code += `//predefinirane na operatora < po otnoshenie na chlen promenlivata ${$(
 };\n`;
 
 code += `
+
 //Predefinirane na operator za izhod, izvezdane cherez fajlov potok
 `;
 code += `ostream& operator<<(ostream &stream, ${className} &${className.toLowerCase()}_i)
@@ -161,7 +163,6 @@ code += `}`;
              code += `    stream >> ${$(propertyNames[i]).val()}_i;
 `;
              code += `    ${className.toLowerCase()}_i.set${capitalized}(${$(propertyNames[i]).val()}_i);           
-
 `;
          }
 
@@ -170,23 +171,128 @@ code += `}`;
          code += `}
 `;
 
-code += `
-//Demonstraciq na klasa i funkcionalnosta mu v glavnata funkciq
+         code += `
+
+//Chast 2         
+class Extend
+{
+    //Chlen Promenlivi, Chastni Promenlivi
+    private:
+    string name;
+    vector<${className}> collection;
+    
+    public:
+    //GET funkcii, akcesori, funkcii za dostap, funkcii za chetene
+    string getName()
+    {
+        return name;
+    }
+    
+    vector<${className}> getCollection()
+    {
+        return collection;
+    }
+    
+    //SET funkcii, mutatori, funkcii za zapis, funkcii za redaktirane
+    void setName(string name_i)
+    {
+        name = name_i;
+    }
+    
+    void setCollection(vector<${className}> collection_i)
+    {
+        collection = collection_i;
+    }
+    
+    //predefinirane na operatora <= po otnoshenie na chlen promenlivata name
+    bool operator<=(Extend extend_i)
+    {
+        return name <= extend_i.name;
+    }
+    
+    //Kontruktor po podrazbirane
+    Extend()
+    {
+        name = "";
+    }
+    
+    //EksplicitenKonstruktor
+    Extend(string name_i)
+    {
+        name = name_i;
+    }
+    
+    //Kopirasht Konstruktor
+	Extend(const Extend& extend_i)
+	{
+		name = extend_i.name;
+		collection = extend_i.collection;
+	}
+};
+
+//Predefinirane na operator za vhod, vavezdane cherez fajlov potok
+//Bi se nuzdaelo ot redakciq za da raboti ako e LIST, NO DA SE PISHE NA IZPIT
+istream& operator>>(istream &stream, Extend  &extend_i)
+{
+    vector<${className}> newCollection;
+    
+    string name_i;
+    stream >> name_i;
+    extend_i.setName(name_i);
+    
+
+    for(int i = 0; i < 3; i++)
+    {
+        ${className} ${className.toLowerCase()}_i;
+        stream >>  ${className.toLowerCase()}_i;
+        newCollection.push_back(${className.toLowerCase()}_i);
+    }
+    
+    extend_i.setCollection(newCollection);
+    
+    return stream;
+}
+
+//Predefinirane na operator za izhod, izvezdane cherez fajlov potok
+//Bi se nuzdaelo ot redakciq za da raboti ako e LIST, NO DA SE PISHE NA IZPIT
+ostream& operator<<(ostream &stream, Extend  &extend_i)
+{
+    stream << "name: " << extend_i.getName() << endl;
+
+    for(int i = 0; i < 3; i++)
+    {
+        stream << extend_i.getCollection()[i] << endl;
+    }
+    
+    return stream;
+}`;
+
+         code += `
+
+//Chast 3
+//Demonstraciq na klasovete i funkciite im v glavnata funkciq kakto i obrabotka na greshki
 void main()
 {
+   try { 
    ${className} ${className.toLowerCase()}_1;
    ${className} ${className.toLowerCase()}_2;
-   ${className} ${className.toLowerCase()}_3;
    
    cin >> ${className.toLowerCase()}_1;
    cin >> ${className.toLowerCase()}_2;
-   cin >> ${className.toLowerCase()}_3;
    
    cout << "- - - - - - - - - - - - - -" << endl;
    
    cout << ${className.toLowerCase()}_1 << endl;
    cout << ${className.toLowerCase()}_2 << endl;
-   cout << ${className.toLowerCase()}_3 << endl;
+   
+   Extend extend;
+   cin >> extend; //NE RABOTI AKO E LIST NO DA SE PISHE NA IZPIT
+   cout << "- - - - - - - - - - - - - -" << endl;
+   cout << extend; //NE RABOTI AKO E LIST NO DA SE PISHE NA IZPIT
+   }    catch(exception error)
+        {
+            cout << error.what() << endl;
+        }
 }`;
 
          if($('#copy-code') !== null) {
